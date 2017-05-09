@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `userName` varchar(30) NOT NULL,
   `userEmail` varchar(60) NOT NULL,
   `userPass` varchar(255) NOT NULL,
+  `userRole` int(11) NOT NULL,
   PRIMARY KEY (`userId`),
   UNIQUE KEY `userEmail` (`userEmail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -51,8 +52,11 @@ CREATE TABLE `reserve` (
   `userName` varchar(30) NOT NULL,
   `userEmail` varchar(60) NOT NULL,
   `rs_Id` int(11) NOT NULL AUTO_INCREMENT,
-  `rstype` int(5) NOT NULL,
-  `rsnum` int(5) NOT NULL,
+  `rmType` varchar(20) NOT NULL,
+  `rmNum` int(5) NOT NULL,
+  `guest` int(5) NOT NULL,
+  `dateCi` int(5) NOT NULL,
+  `dateCo` int(5) NOT NULL,
   PRIMARY KEY (`rs_Id`),
   UNIQUE KEY `userEmail` (`userEmail`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -60,5 +64,34 @@ CREATE TABLE `reserve` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room`
+--
+
+CREATE TABLE `room` (
+  `roomId` int(11) NOT NULL auto_increment,
+  `roomType` varchar(30) NOT NULL,
+  `roomCost` int(11) NOT NULL,
+  `roomQuantity` int(11) NOT NULL,
+  `maxGuest` int(11) NOT NULL,
+  PRIMARY KEY  (`roomId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--
+-- Dumping data for table `room`
+--
+
+INSERT INTO `room` (`roomId`, `roomType`, `roomCost`, `roomQuantity`, `maxGuest`) VALUES
+(1, 'sBed', 55, 10, 1),
+(2, 'tSBed', 80, 10, 2),
+(3, 'dBed', 140, 5, 2),
+(4, 'fBed', 30, 12, 1);
 
 -- --------------------------------------------------------

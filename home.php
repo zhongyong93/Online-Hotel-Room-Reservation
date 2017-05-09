@@ -1,6 +1,5 @@
 <?php
-	ob_start();
-	session_start();
+	
 	require_once 'dbconnect.php';
 	
 	// if session is not set this will redirect to login page
@@ -9,15 +8,23 @@
 		exit;
 	}
 	// select loggedin users detail
-	$res=mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']);
-	$userRow=mysql_fetch_array($res);
+	$sql = "SELECT * FROM users WHERE userId=".$_SESSION['user'];
+	$result = mysqli_query($conn, $sql);
+	echo $conn->error;
+	 while($row = mysqli_fetch_array($result)) {
+   		$userRow = $row;
+ }
+
+	mysqli_close($conn);
 ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
 <body>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Welcome - <?php echo $userRow['userEmail']; ?></title>
+<title>Welcome - <?php echo $userRow['userName']; ?></title>
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"  />
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -56,26 +63,58 @@
       </div>
     </nav> 
 
-	<div id="wrapper">
+	<div id="wrapper" style="width: 100%;">
 
 	<div class="container">
     
     	<div class="page-header">
     	<h3><font size=100% color=black> Welcome to My Hotel</h3>
     	</div>
-        <div class="row">
-        <h1>  <table style='border:0px solid #000000;'>
+		
 <tr>
-
+<div style="float:right; width: 35%" font size=3>
 <?php
-
+$checkIn = "";
+$checkOut = "";
+$guest = "";
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+?> 
+<table>
+<form method="post" action="newnew2.php">  
+<font size=5><label for="meeting" >Check In : </label><input id="meeting" type="date" name="checkIn" min=<?php echo  ''.date("Y-m-d")?> value="<?php echo $checkIn;?>"></font><br>
+<font size=5><label for="meeting">Check Out : </label><input id="meeting" type="date" name="checkOut" min=<?php echo  ''.date("Y-m-d",strtotime(' +1 day'))?> value="<?php echo $checkOut;?>"></font><br>
+<font size=5><label for="meeting">Guest : </font></label>
+<font size=5><select id="meeting" name="guest" id="max_adults" value="<?php echo $guest;?>"> <br>
+<option value="1" selected="selected">1&nbsp;</option>
+<option value="2">2&nbsp;</option>
+<option value="3">3&nbsp;</option>
+<option value="4">4&nbsp;</option>
+<option value="5">5&nbsp;</option>
+<option value="6">6&nbsp;</option>
+<option value="7">7&nbsp;</option>
+<option value="8">8&nbsp;</option></select>&nbsp;</td></tr><br>
+<tr><td style="height:7px"></font></td></tr>
+ <font size=5><input type="submit" name="submit" value="Check Availability"></font>
+</form>
+</table>
+</body>
+</html>
+</div>
+<div style="float:right; width: 65%">
+<?php
 date_default_timezone_set("Asia/Kuala_Lumpur");
 echo "Local Time is " . date("Y/m/d") . " " . date("h:i:sa");
 
 ?>
-
+<div id="page">
+<div id="content">
 <TD vAlign=top colSpan=3 align="center">
-              <div style="width:590px; height:110px" align="left">
+              <div style="width:590px; height:110px" align="right">
 			  
 			   <font size=50% color=black> Room Choice </font><br>
 			  
@@ -114,7 +153,8 @@ echo "Local Time is " . date("Y/m/d") . " " . date("h:i:sa");
         </div>
     </div>
 	</div>
-
+</div>
+</div>
     <script src="assets/jquery-1.11.3-jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 </style>				

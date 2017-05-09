@@ -1,6 +1,5 @@
 <?php
 	ob_start();
-	session_start();
 	require_once 'dbconnect.php';
 	
 	// if session is not set this will redirect to login page
@@ -9,8 +8,15 @@
 		exit;
 	}
 	// select loggedin users detail
-	$res=mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']);
-	$userRow=mysql_fetch_array($res);
+	$sql = "SELECT * FROM users WHERE userId=".$_SESSION['user'];
+	$result = $conn->query($sql);
+	echo $conn->error;
+	 while($row = $result->fetch_array()) {
+   		$userRow[] = $row;
+ }
+
+	
+	mysqli_close($conn);
 ?>
 <!DOCTYPE html>
 <html>

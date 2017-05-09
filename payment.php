@@ -1,5 +1,5 @@
 <?php
-	ob_start();
+	
 	require_once 'dbconnect.php';
 	
 	// if session is not set this will redirect to login page
@@ -7,28 +7,38 @@
 		header("Location: index.php");
 		exit;
 	}
+	$payment = "";
+	$reserveRow['cost'] = "0";
 	// select loggedin users detail
 	$sql = "SELECT * FROM users WHERE userId=".$_SESSION['user'];
-	$result = $conn->query($sql);
+	$result = mysqli_query($conn, $sql);
 	echo $conn->error;
-	 while($row = $result->fetch_array()) {
-   		$userRow[] = $row;
+	 while($row = mysqli_fetch_array($result)) {
+   		$userRow = $row;
  }
-
-	
-	mysqli_close($conn);
+	$sql1 = "SELECT * FROM reserve WHERE userId=".$_SESSION['user'];
+	$res = mysqli_query($conn, $sql1);
+	if (!$res){
+	$reserveRow['cost'] = "0" ;
+	}
+	else if ($res) {
+		echo $conn->error;
+	 while($row1 = mysqli_fetch_array($res)) {
+   		$reserveRow = $row1;
+	 }
+	 echo $reserveRow['cost'];
+	}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <body>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Welcome - <?php echo $userRow[0]['userName']; ?></title>
+<title>Welcome - <?php echo $userRow['userName']; ?></title>
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"  />
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 <body>
-
 	<nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -52,7 +62,7 @@
             
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow[0]['userEmail']; ?>&nbsp;<span class="caret"></span></a>
+			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow['userEmail']; ?>&nbsp;<span class="caret"></span></a>
               <ul class="dropdown-menu">
 				<li><a href="profile.php"><span class="glyphicon glyphicon-user"></span>&nbsp;Profile</a></li>
                 <li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>
@@ -61,27 +71,32 @@
           </ul>
         </div><!--/.nav-collapse -->
       </div>
-    </nav> 
+    </nav>
+	<br><br><br>
+	
+	<div align="center">
+<h1>Payment </h1>
+<div class="form-group">
+            	<hr />
+            </div>
+ <table width ="900" align="center">
 
-	<div class="page-header">
-<h1><br><p style="color:Black" align="center"><span class="glyphicon glyphicon-home"></span>&nbsp;About My Hotel</a></p></h1>
-</div>
-<TD vAlign=top colSpan=3 align="center">
-<div style="width:1500px; height:110px" align="center">
-<h2><p style="color:Black;">Welcome to My Hotel</p></h2>
+<tr align="center">
+<td colspan="10"><h2><b>As reminder, every cancellation by the users will be charged for RM100.00 as the cancellation fees </b></h2></td>
+</tr>
+<?php $payment = ($userRow['costPay'] - $reserveRow['cost']);?>
+<tr align="center">
+<td colspan="10"><h2><b>Currently,<?php echo $userRow['userName'];?> have to pay : RM<?php echo $userRow['costPay'];?> <br> include reservation fees : RM <?php echo $reserveRow['cost'];?> <br> and previous debt : RM<?php echo $payment ;?></b></h2></td>
+</tr>
 
-<h3><p style="color:Black;">Malaysia is the one of the most enjoyable countries to travel. 
-Many travelers like to travel to Malaysia because of various kinds of event and cultural activities. 
-Travel spots which located in different states, such as Kedah, Penang, Perak, Kelantan and so on. 
-Other than the travel spots, the generations of slow life in Malaysia attracts the travelers to pay a visit and enjoy their life vacation or staying in Malaysia. 
-So, a lot of accommodations are set up to convenience the travelers to stay overnight safely. </p></h3>
-echo'<img src="hotel.jpg" width="550" height="300" style="margin:center;">';
+</table>
 </div>
-	<script src="assets/jquery-1.11.3-jquery.min.js"></script>
+ <script src="assets/jquery-1.11.3-jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
+	</style>				
 </body>
+</head>
 </html>
-
 <?php
 $url = '6.jpg';
 ?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -99,3 +114,5 @@ background-image:url('<?php echo $url ?>');
 <body>
 </body>
 </html>
+<?php ob_end_flush(); ?>
+<?php mysqli_close($conn); ?>

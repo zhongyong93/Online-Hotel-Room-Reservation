@@ -13,13 +13,12 @@ if($userRow['userRole'] != 1){
 	echo "<script>window.open('index.php','_self')</script>";
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
 <body>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Welcome - <?php echo $userRow['userName']; ?></title>
+<title>Welcome - <?php echo $userRow['userEmail']; ?></title>
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"  />
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -48,7 +47,7 @@ if($userRow['userRole'] != 1){
             
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow['userEmail']; ?>&nbsp;<span class="caret"></span></a>
+			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo 'admin'; ?>&nbsp;<span class="caret"></span></a>
               <ul class="dropdown-menu">
 				<li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Profile</a></li>
                 <li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>
@@ -64,21 +63,27 @@ if($userRow['userRole'] != 1){
 					<div id="content">
 						<div class="post">
 					
-							<h1><br><br> <p style="color:Black" align="center" class="title">View User List</p></h1>
+							<h1><br><br> <p style="color:Black" align="center" class="title">View Reservation Room</p></h1>
 							<div class="entry" align="center">
 
-								<table width="600">
+								<table width="1100">
 								<tr>
-								<th align="center" bgcolor="silver">Reservation ID</th>
-								<th align="center" bgcolor="silver">userName</th>
-								<th align="center" bgcolor="silver">userEmail</th>
+								<th align="center" bgcolor="silver">User ID</th>
+								<th align="center" bgcolor="silver">UserName</th>
+								<th align="center" bgcolor="silver">UserEmail</th>
+								<th align="center" bgcolor="silver">Reserve Id</th>
+								<th align="center" bgcolor="silver">Room Type</th>
+								<th align="center" bgcolor="silver">Room Number</th>
+								<th align="center" bgcolor="silver">Number Guest</th>
+								<th align="center" bgcolor="silver">Date Check In</th>
+								<th align="center" bgcolor="silver">Date Check Out</th>
+								<th align="center" bgcolor="silver">Cost</th>
 								</tr>
 <?php
-$sql1 = "SELECT * FROM users WHERE userId=".$_SESSION['user'];
+$sql1 = "SELECT * FROM reserve";
 $result = mysqli_query($conn, $sql1);
 if ($result !== FALSE) {
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-$sql1="SELECT * FROM `users` WHERE userRole != 1";
 $result=mysqli_query($conn,$sql1) or die("Can't Execute Query...");
 if($result->num_rows > 0)
 {
@@ -87,6 +92,13 @@ while($row = mysqli_fetch_assoc($result))
 echo "<th>".$row["userId"]."</th>";
 echo "<th>".$row["userName"]."</th>";
 echo "<th>".$row["userEmail"]."</th>";
+echo "<th>".$row["rs_Id"]."</th>";
+echo "<th>".$row["rmType"]."</th>";
+echo "<th>".$row["rmNum"]."</th>";
+echo "<th>".$row["guest"]."</th>";
+echo "<th>".$row["dateCi"]."</th>";
+echo "<th>".$row["dateCo"]."</th>";
+echo "<th>".$row["cost"]."</th>";
 echo "<tr>".PHP_EOL;
 }
 }
@@ -98,10 +110,10 @@ echo "0 results";
 ?>
 </table>
 <br/>
-<form method="POST" action="delete.php">
+<form method="POST" action="delete1.php">
 <?php
 $result = mysqli_query($conn, $sql1);
-echo "Select Reservation Email to delete : ";
+echo "Select Reservation Room to delete : ";
 echo "<select name=\"userId\">";
 while($row=mysqli_fetch_array($result))
 {
@@ -110,12 +122,12 @@ echo "<option value= '".$row['userId']."' > ".$row['userEmail']." </option>";
 echo "</select>";
  echo "<br><br>";
  ?>
-<p><input type="submit" href="delete.php" value="Delete" name="delete"/></p>
+<p><input type="submit" value="Delete" name="delete"/></p>
 </form>
 </div>
 </div>
 </div>
-<?php 	mysqli_close($conn); ?>
+
 	<script src="assets/jquery-1.11.3-jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 </body>
@@ -138,3 +150,4 @@ background-image:url('<?php echo $url ?>');
 <body>
 </body>
 </html>
+<?php 	mysqli_close($conn); ?>

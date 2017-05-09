@@ -1,6 +1,5 @@
 <?php
 	ob_start();
-	session_start();
 	require_once 'dbconnect.php';
 	
 	// if session is not set this will redirect to login page
@@ -9,8 +8,52 @@
 		exit;
 	}
 	// select loggedin users detail
-	$res=mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']);
-	$userRow=mysql_fetch_array($res);
+	$sql = "SELECT * FROM users WHERE userId=".$_SESSION['user'];
+	$result = mysqli_query($conn, $sql);
+	echo $conn->error;
+	 while($row = mysqli_fetch_array($result)) {
+   		$userRow = $row;
+ }
+	if ($userRow['userRole'] != 2){
+	echo "<script>alert('You are Admin,not allow to change password!')</script>";
+	echo "<script>window.open('index.php','_self')</script>";
+	}
+	$pass = "";
+	$newPass = "";
+	$passError = "";
+	if ( isset($_POST['update']) ) {
+	$pass = trim($_POST['pass1']);
+	$pass = strip_tags($pass);
+	$pass = htmlspecialchars($pass);
+	$pass = mysqli_real_escape_string($conn, $pass);
+	// password validation
+	if (empty($pass)){
+		$error = true;
+		$passError = "Please enter password.";
+	} else if(strlen($pass) < 6) {
+		$error = true;
+		$passError = "Password must have atleast 6 characters.";
+	}
+		
+	// password encrypt using SHA256();
+	$password = hash('sha256', $pass);
+	
+	$newPass = trim($_POST['pass2']);
+	$newPass = strip_tags($newPass);
+	$newPass = htmlspecialchars($newPass);
+	$newPass = mysqli_real_escape_string($conn, $newPass);
+	// password validation
+	if (empty($newPass)){
+		$error = true;
+		$passError = "Please enter password.";
+	} else if(strlen($newPass) < 6) {
+		$error = true;
+		$passError = "Password must have atleast 6 characters.";
+	}
+		
+	// password encrypt using SHA256();
+	$password1 = hash('sha256', $newPass);
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -67,16 +110,28 @@
         <div class="row">
         <h1>  <table style='border:0px solid #000000;'>
 <tr>
-
+<form action="editprofile.php" method="POST">
 <h2> <font size=6 color=black> User Profile </font><br></h2>
-	<span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow['userName']; ?>&nbsp;</span></a> <br>
-	<span class="glyphicon glyphicon-lock"></span>&nbsp;<?php echo "Password   " . "       :"?> <br>
-	<input type="text" name="userPass" placeholder="Eg:123456"> <br>
-    <input type="reset"><br>
-	<span class="glyphicon glyphicon-lock"></span>&nbsp;<?php echo "Change Password" . ":"?> <br>
-	<input type="text" name="userNewPass" placeholder="Eg:123456"> <br>
-    <input type="reset"><br>
-	</div>
+<span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow['userName']; ?>&nbsp;</span></a> <br>
+<div class="form-group">
+<div class="input-group">
+<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+<input type="password" name="pass1" class="form-control" placeholder="Enter Password" maxlength="15"/>
+</div>
+<span class="text-danger"><?php echo $passError; ?></span>
+</div>
+<div class="form-group">
+<div class="input-group">
+<span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+<input type="password" name="pass2" class="form-control" placeholder="Enter Password" maxlength="15"/>
+</div>
+<span class="text-danger"><?php echo $passError; ?></span>
+</div>
+<tr align="center">
+<td colspan="10"><input type="submit" name="update" value="Update Profile" /></td>
+</tr>
+</div>
+	
 	<script src="assets/jquery-1.11.3-jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 </body>
@@ -99,3 +154,4 @@ background-image:url('<?php echo $url ?>');
 <body>
 </body>
 </html>
+<?php mysqli_close($conn); ?>

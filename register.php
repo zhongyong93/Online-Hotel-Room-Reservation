@@ -1,27 +1,37 @@
 <?php
 	ob_start();
-	session_start();
 	if( isset($_SESSION['user'])!="" ){
 		header("Location: home.php");
 	}
 	include_once 'dbconnect.php';
 
 	$error = false;
-
+	$name = "";
+	$nameError = "";
+	$email = "";
+	$emailError = "";
+	$pass = "";
+	$passError = "";
+	
 	if ( isset($_POST['btn-signup']) ) {
 		
 		// clean user inputs to prevent sql injections
 		$name = trim($_POST['name']);
 		$name = strip_tags($name);
 		$name = htmlspecialchars($name);
+		$name = mysqli_real_escape_string($conn, $name);
 		
 		$email = trim($_POST['email']);
 		$email = strip_tags($email);
 		$email = htmlspecialchars($email);
+		$email = mysqli_real_escape_string($conn, $email);
 		
 		$pass = trim($_POST['pass']);
 		$pass = strip_tags($pass);
 		$pass = htmlspecialchars($pass);
+		$pass = mysqli_real_escape_string($conn, $pass);
+		
+		$role = "";
 		
 		// basic name validation
 		if (empty($name)) {
@@ -29,7 +39,7 @@
 			$nameError = "Please enter your full name.";
 		} else if (strlen($name) < 3) {
 			$error = true;
-			$nameError = "Name must have atleat 3 characters.";
+			$nameError = "Name must have atleast 3 characters.";
 		} else if (!preg_match("/^[a-zA-Z ]+$/",$name)) {
 			$error = true;
 			$nameError = "Name must contain alphabets and space.";
@@ -42,8 +52,8 @@
 		} else {
 			// check email exist or not
 			$query = "SELECT userEmail FROM users WHERE userEmail='$email'";
-			$result = mysql_query($query);
-			$count = mysql_num_rows($result);
+			$result = mysqli_query($conn,$query);
+			$count = mysqli_num_rows($result);
 			if($count!=0){
 				$error = true;
 				$emailError = "Provided Email is already in use.";
@@ -63,9 +73,11 @@
 		
 		// if there's no error, continue to signup
 		if( !$error ) {
-			
-			$query = "INSERT INTO users(userName,userEmail,userPass) VALUES('$name','$email','$password')";
-			$res = mysql_query($query);
+				// select loggedin users detail
+			$pay = "0";
+			$role = "2";
+			$query = "INSERT INTO users(userName,userEmail,userPass,userRole,costPay) VALUES('$name','$email','$password','$role','$pay')";
+			$res = mysqli_query($conn,$query);
 				
 			if ($res) {
 				$errTyp = "success";
@@ -79,7 +91,9 @@
 			}	
 				
 		}
-		
+		unset($name);
+		unset($email);
+		unset($pass);
 		
 	}
 ?>
@@ -87,7 +101,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Coding Cage - Login & Registration System</title>
+<title>Welcome to my Hotel - Login & Registration System</title>
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"  />
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -124,7 +138,7 @@
             <div class="form-group">
             	<div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-            	<input type="text" name="name" class="form-control" placeholder="Enter Name" maxlength="50" value="<?php echo $name ?>" />
+            	<input type="text" name="name" class="form-control" placeholder="Enter Your Name" maxlength="50" />
                 </div>
                 <span class="text-danger"><?php echo $nameError; ?></span>
             </div>
@@ -132,7 +146,7 @@
             <div class="form-group">
             	<div class="input-group">
                 <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            	<input type="email" name="email" class="form-control" placeholder="Enter Your Email" maxlength="40" value="<?php echo $email ?>" />
+            	<input type="email" name="email" class="form-control" placeholder="Enter Your Email" maxlength="40" />
                 </div>
                 <span class="text-danger"><?php echo $emailError; ?></span>
             </div>

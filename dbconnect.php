@@ -1,21 +1,22 @@
 <?php
+ob_start();
+session_start();
 
-	// this will avoid mysql_connect() deprecation error.
-	error_reporting( ~E_DEPRECATED & ~E_NOTICE );
-	// but I strongly suggest you to use PDO or MySQLi.
-	
-	define('DBHOST', 'localhost');
-	define('DBUSER', 'root');
-	define('DBPASS', '');
-	define('DBNAME', 'dbtest');
-	
-	$conn = mysql_connect(DBHOST,DBUSER,DBPASS);
-	$dbcon = mysql_select_db(DBNAME);
-	
-	if ( !$conn ) {
-		die("Connection failed : " . mysql_error());
-	}
-	
-	if ( !$dbcon ) {
-		die("Database Connection failed : " . mysql_error());
-	}
+    //comment these two line when your code started working without any error
+    error_reporting( E_ALL);//check all type of errors
+    ini_set('display_errors',1); // display those errors so that you can rectify them
+
+    define('DBHOST', 'localhost');
+    define('DBUSER', 'root');
+    define('DBPASS', '');
+    define('DBNAME', 'dbtest');
+
+  
+// Create connection
+$conn = new mysqli(DBHOST, DBUSER, DBPASS, DBNAME);
+// Check connection
+if ($conn->connect_error) {
+     die("Connection failed: " . $conn->connect_error);
+}
+
+?>

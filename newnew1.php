@@ -1,5 +1,5 @@
 <?php
-	ob_start();
+	
 	require_once 'dbconnect.php';
 	
 	// if session is not set this will redirect to login page
@@ -8,27 +8,24 @@
 		exit;
 	}
 	// select loggedin users detail
-	$sql = "SELECT * FROM users WHERE userId=".$_SESSION['user'];
-	$result = $conn->query($sql);
-	echo $conn->error;
-	 while($row = $result->fetch_array()) {
-   		$userRow[] = $row;
- }
-
-	
-	mysqli_close($conn);
+	$res=mysqli_query($conn,"SELECT * FROM users WHERE userId=".$_SESSION['user']);
+	$userRow=mysqli_fetch_array($res);
+	if ($userRow['userRole'] != 2){
+	echo "<script>alert('You are Admin,not allow to reserve room!')</script>";
+	echo "<script>window.open('index.php','_self')</script>";
+	}
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
 <body>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Welcome - <?php echo $userRow[0]['userName']; ?></title>
+<title>Welcome - <?php echo $userRow['userName']; ?></title>
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"  />
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 <body>
-
 	<nav class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -52,7 +49,7 @@
             
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow[0]['userEmail']; ?>&nbsp;<span class="caret"></span></a>
+			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow['userEmail']; ?>&nbsp;<span class="caret"></span></a>
               <ul class="dropdown-menu">
 				<li><a href="profile.php"><span class="glyphicon glyphicon-user"></span>&nbsp;Profile</a></li>
                 <li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>
@@ -62,24 +59,52 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav> 
+<?php
+$checkIn = "";
+$checkOut = "";
+$guest = "";
 
-	<div class="page-header">
-<h1><br><p style="color:Black" align="center"><span class="glyphicon glyphicon-home"></span>&nbsp;About My Hotel</a></p></h1>
-</div>
-<TD vAlign=top colSpan=3 align="center">
-<div style="width:1500px; height:110px" align="center">
-<h2><p style="color:Black;">Welcome to My Hotel</p></h2>
-
-<h3><p style="color:Black;">Malaysia is the one of the most enjoyable countries to travel. 
-Many travelers like to travel to Malaysia because of various kinds of event and cultural activities. 
-Travel spots which located in different states, such as Kedah, Penang, Perak, Kelantan and so on. 
-Other than the travel spots, the generations of slow life in Malaysia attracts the travelers to pay a visit and enjoy their life vacation or staying in Malaysia. 
-So, a lot of accommodations are set up to convenience the travelers to stay overnight safely. </p></h3>
-echo'<img src="hotel.jpg" width="550" height="300" style="margin:center;">';
-</div>
-	<script src="assets/jquery-1.11.3-jquery.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+?> 
+<br>
+<br>
+<br>
+<div align="center">
+<h1>Welcome to reserve the room in our hotel. </h1>
+<table width ="800" align="center">
+<div class="form-group">
+            	<hr />
+            </div>
+<form method="post" action="newnew2.php">  
+<label for="meeting">Check In : </label><input align="center" id="meeting" type="date" name="checkIn" min=<?php echo  ''.date("Y-m-d")?> value="<?php echo $checkIn;?>"><br>
+<label for="meeting">Check Out : </label><input align="center" id="meeting" type="date" name="checkOut" min=<?php echo  ''.date("Y-m-d",strtotime(' +1 day'))?> value="<?php echo $checkOut;?>"><br>
+<label for="meeting">Guest : </label>
+<select id="meeting" align="center" name="guest" id="max_adults" value="<?php echo $guest;?>"> <br>
+<option value="1" selected="selected">1&nbsp;</option>
+<option value="2">2&nbsp;</option>
+<option value="3">3&nbsp;</option>
+<option value="4">4&nbsp;</option>
+<option value="5">5&nbsp;</option>
+<option value="6">6&nbsp;</option>
+<option value="7">7&nbsp;</option>
+<option value="8">8&nbsp;</option></select>&nbsp;</td></tr><br>
+<tr><td style="height:7px"></td></tr>
+ <input type="submit" name="submit" value="Check Availability">  
+</form>
+</table>
 </body>
+</html>
+</div>
+    <script src="assets/jquery-1.11.3-jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+</style>				
+</body>
+</head>
 </html>
 
 <?php
@@ -99,3 +124,6 @@ background-image:url('<?php echo $url ?>');
 <body>
 </body>
 </html>
+<?php ob_end_flush(); ?>
+<?php mysqli_close($conn); ?>
+

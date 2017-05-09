@@ -1,23 +1,29 @@
 <?php
 	ob_start();
-	session_start();
 	require_once 'dbconnect.php';
-	
+
 	// if session is not set this will redirect to login page
 	if( !isset($_SESSION['user']) ) {
 		header("Location: index.php");
 		exit;
 	}
 	// select loggedin users detail
-	$res=mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']);
-	$userRow=mysql_fetch_array($res);
+	$sql = "SELECT * FROM users WHERE userId=".$_SESSION['user'];
+	$result = $conn->query($sql);
+	echo $conn->error;
+	 while($row = $result->fetch_array()) {
+   		$userRow[] = $row;
+ }
+
+	
+	mysqli_close($conn);
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 <body>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Welcome - <?php echo $userRow['userEmail']; ?></title>
+<title>Welcome - <?php echo $userRow[0]['userEmail']; ?></title>
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"  />
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -46,7 +52,7 @@
             
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow['userEmail']; ?>&nbsp;<span class="caret"></span></a>
+			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow[0]['userEmail']; ?>&nbsp;<span class="caret"></span></a>
               <ul class="dropdown-menu">
 				<li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Profile</a></li>
                 <li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>

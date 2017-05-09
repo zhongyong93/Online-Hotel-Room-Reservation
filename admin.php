@@ -1,82 +1,26 @@
 <?php
-	ob_start();
-	session_start();
 	require_once 'dbconnect.php';
-	
-	// it will never let you open edit page if session is set
-	if ( isset($_SESSION['userName'])=="admin" ) {
-		header("Location: edit.php");
-		exit;
-	}
-	
-	$error = false;
-	
-	if( isset($_POST['btn-login']) ) {	
-		
-		// prevent sql injections/ clear user invalid inputs
-		$email = trim($_POST['email']);
-		$email = strip_tags($email);
-		$email = htmlspecialchars($email);
-		
-		$pass = trim($_POST['pass']);
-		$pass = strip_tags($pass);
-		$pass = htmlspecialchars($pass);
-		// prevent sql injections / clear user invalid inputs
-		
-		if(empty($email)){
-			$error = true;
-			$emailError = "Please enter your email address.";
-		} else if ( !filter_var($email,FILTER_VALIDATE_EMAIL) ) {
-			$error = true;
-			$emailError = "Please enter admin email address.";
-		}
-		
-		if(empty($pass)){
-			$error = true;
-			$passError = "Please enter your password.";
-		}
-		
-		// if there's no error, continue to login
-		if (!$error) {
-			
-			$password = hash('sha256', $pass); // password hashing using SHA256
-		
-			$res=mysql_query("SELECT userId, userName, userPass FROM users WHERE userEmail='$email'");
-			$row=mysql_fetch_array($res);
-			$count = mysql_num_rows($res); // if uname/pass correct it returns must be 1 row
-			
-			if( $count == 1 && $row['userPass']==$password ) {
-				$_SESSION['user'] = $row['admin'];
-				header("Location: about.php");
-			} else {
-				$errMSG = "Incorrect Credentials, Try again...";
-			}
-				
-		}
-		
-	}
-
-?>
-<?php
-	ob_start();
-	session_start();
-	require_once 'dbconnect.php';
-	
 	// if session is not set this will redirect to login page
-	if( !isset($_SESSION['user']) ) {
-		header("Location: admin.php");
-		exit;
-	}
-	// select loggedin users detail
-	$res=mysql_query("SELECT * FROM users WHERE userId=".$_SESSION['user']);
-	$userRow=mysql_fetch_array($res);
+if( isset($_SESSION['user']) ) {
+$sql = "SELECT * FROM users WHERE userId=".$_SESSION['user'];
+	$result = mysqli_query($conn, $sql);
+	echo $conn->error;
+	 while($row = mysqli_fetch_array($result)) {
+   		$userRow = $row;
+}}
+if($userRow['userRole'] != 1){
+	echo "<script>alert('You are not Admin,not allow to enter here!')</script>";
+	echo "<script>window.open('index.php','_self')</script>";
+}
 ?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
 <body>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Welcome - <?php echo $userRow['userEmail']; ?></title>
+<title>Welcome Admin - <?php echo ''; ?></title>
 <link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"  />
 <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
@@ -101,78 +45,30 @@
 			<li><a href="payment.php">Payment</a></li>
 			<li><a href="admin.php">Admin</a></li>
           </ul>
-          <ul class="nav navbar-nav navbar-right">
-            
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			  <span class="glyphicon glyphicon-user"></span>&nbsp;Hi, <?php echo $userRow['userEmail']; ?>&nbsp;<span class="caret"></span></a>
-              <ul class="dropdown-menu">
-				<li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Profile</a></li>
-                <li><a href="logout.php?logout"><span class="glyphicon glyphicon-log-out"></span>&nbsp;Sign Out</a></li>
-              </ul>
-            </li>
-          </ul>
+          
         </div><!--/.nav-collapse -->
       </div>
     </nav> 
-	<div class="container">
-
-	<div id="login-form">
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off">
-    
-    	<div class="col-md-12">
-        
-        	<div class="form-group">
-            	<h2 class="">Sign In for Admin Only</h2>
-            </div>
-        
-        	<div class="form-group">
-            	<hr />
-            </div>
-            
-<?php
-			if ( isset($errMSG) ) {
-				
-				?>
-				<div class="form-group">
-            	<div class="alert alert-danger">
-				<span class="glyphicon glyphicon-info-sign"></span> <?php echo $errMSG; ?>
-                </div>
-            	</div>
-                <?php
-			}
-			?>
-            
-            <div class="form-group">
-            	<div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-envelope"></span></span>
-            	<input type="email" name="email" class="form-control" placeholder="Admin Email" value="<?php echo $email; ?>" maxlength="40" />
-                </div>
-                <span class="text-danger"><?php echo $emailError; ?></span>
-            </div>
-            
-            <div class="form-group">
-            	<div class="input-group">
-                <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-            	<input type="password" name="pass" class="form-control" placeholder="Admin Password" maxlength="15" />
-                </div>
-                <span class="text-danger"><?php echo $passError; ?></span>
-            </div>
- 
-            <div class="form-group">
-            	<button type="submit" class="btn btn-block btn-primary" name="btn-login" href="about.php">Verification</button>
-            </div>
-            
-			<div class="form-group">
-            	<hr />
-            </div>
+<div class="page-header">
+<h1><br><br><p style="color:Black" align="center"><span class="glyphicon glyphicon-user"></span>&nbsp;<?php echo "Admin Control Center"?></p></h1>
+</div>
+<div class="row">
+        <h1>  <table style='border:0px solid #000000;'>
+<tr>
+<TD vAlign=top colSpan=3 align="center">
+<div style="width:1500px; height:110px" align="center">
+<h2><p style="color:Black;">Admin only are allowed to choose the choice as shown below.</p></h2>
+<form method="POST" action="admin1.php">
+<table width ="800" align="center">
+<tr align="center">
+<td> <input align="left" name="edit" type="submit" value="Delete User" />
+</td>
+<td> <input align="right" name="edit1" type="submit" value="Delete Reservation" />
+</tr>
+</div>
+</div>
+</form>
 	
-    </form>
-    </div>	
-
-</div>	
-
-
 	<script src="assets/jquery-1.11.3-jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 </body>
@@ -195,3 +91,4 @@ background-image:url('<?php echo $url ?>');
 <body>
 </body>
 </html>
+<?php 	mysqli_close($conn); ?>
