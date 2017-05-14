@@ -76,6 +76,10 @@ $checkOut = test_input($_POST["checkOut"]);
 $guest = test_input($_POST["guest"]);
 $_SESSION['checkIn']= $checkIn;
 $_SESSION['checkOut']= $checkOut;
+if ($checkIn == $checkOut) {
+	 echo "<script>alert('The date cannot be same. Please check again.')</script>";
+	 echo "<script>window.open('newnew1.php','_self')</script>";
+}
 ?>
     	<h1> <font size=20% color=black>Room Choice </font><br></h1>
     	</div>

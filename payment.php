@@ -26,8 +26,14 @@
 	 while($row1 = mysqli_fetch_array($res)) {
    		$reserveRow = $row1;
 	 }
-	 echo $reserveRow['cost'];
 	}
+	$sql3 = "SELECT * FROM `reserve` WHERE `userId` = ".$_SESSION['uid'];
+	$result3 = mysqli_query($conn,$sql3);
+	$total = 0;
+	$payment = "";
+	while ($row3 = mysqli_fetch_assoc($result3)) {
+	$total = $total + $row3['cost']; }
+	$payment = $userRow['costPay'] - $total;
 ?>
 <!DOCTYPE html>
 <html>
@@ -75,20 +81,75 @@
 	<br><br><br>
 	
 	<div align="center">
-<h1>Payment </h1>
+<h1><b>Payment </b></h1>
 <div class="form-group">
             	<hr />
             </div>
  <table width ="900" align="center">
 
 <tr align="center">
-<td colspan="10"><h2><b>As reminder, every cancellation by the users will be charged for RM100.00 as the cancellation fees </b></h2></td>
+<td colspan="10"><h2>As reminder, every cancellation has to be done one day before check in date, else will be charged 50% of reservation fees as the cancellation fees.</h2></td>
 </tr>
-<?php $payment = ($userRow['costPay'] - $reserveRow['cost']);?>
+<table width="1100">
+								<tr>
+								<th align="center" bgcolor="silver">Reserve Id</th>
+								<th align="center" bgcolor="silver">Room Type</th>
+								<th align="center" bgcolor="silver">Room Number</th>
+								<th align="center" bgcolor="silver">Number Guest</th>
+								<th align="center" bgcolor="silver">Date Check In</th>
+								<th align="center" bgcolor="silver">Date Check Out</th>
+								<th align="center" bgcolor="silver">Cost</th>
+								</tr>
+<?php
+$sql2 = "SELECT * FROM reserve WHERE userId=".$_SESSION['user'];
+$res1 = mysqli_query($conn, $sql2);
+if ($res1 !== FALSE) {
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+$res1=mysqli_query($conn,$sql2) or die("Can't Execute Query...");
+if($res1->num_rows > 0)
+{
+while($row1 = mysqli_fetch_assoc($res1))
+{
+echo "<th>".$row1["rs_Id"]."</th>";
+echo "<th>".$row1["rmType"]."</th>";
+echo "<th>".$row1["rmNum"]."</th>";
+echo "<th>".$row1["guest"]."</th>";
+echo "<th>".$row1["dateCi"]."</th>";
+echo "<th>".$row1["dateCo"]."</th>";
+echo "<th>".$row1["cost"]."</th>";
+echo "<tr>".PHP_EOL;
+}
+}
+}
+?>
+</table>
+<form method="POST" action="delete1.php">
+<?php
+$result2 = mysqli_query($conn, $sql2);
+echo "Select Reservation Room to delete : ";
+echo "<select name=\"rs_Id\">";
+while($row2=mysqli_fetch_array($result2))
+{
+echo "<option value= '".$row2['rs_Id']."' > ".$row2['rs_Id']." </option>";
+}
+echo "</select>";
+ echo "<br><br>";
+ ?>
+<p><input type="submit" value="Delete" name="delete"/></p>
+</form>
+<?php 
+?>
 <tr align="center">
-<td colspan="10"><h2><b>Currently,<?php echo $userRow['userName'];?> have to pay : RM<?php echo $userRow['costPay'];?> <br> include reservation fees : RM <?php echo $reserveRow['cost'];?> <br> and previous debt : RM<?php echo $payment ;?></b></h2></td>
+<td colspan="10"><h2><b>Currently,<?php echo $userRow['userName'];?> has to pay in total : RM<?php echo $userRow['costPay'];?> <br> and previous debt : RM<?php echo $payment;?></b></h2></td>
 </tr>
-
+<tr>
+<form action="http://www.maybank2u.com.my/">
+<td colspan="10"><h3><input type="submit" value="Credit Card" /></td><td colspan="10"><input type="submit" value="Bank Transfer"/></h3></td>
+</form>
+</tr>
+<tr align="center">
+<td colspan="10"><h3>Please feel free to <span><a href="contact.php">Contact Us</a> if there is any comment, question or suggestion you may have.</span></h3></td>
+</tr>
 </table>
 </div>
  <script src="assets/jquery-1.11.3-jquery.min.js"></script>

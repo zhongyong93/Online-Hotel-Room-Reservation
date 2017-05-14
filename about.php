@@ -67,7 +67,7 @@
 <h1><br><p style="color:Black" align="center"><span class="glyphicon glyphicon-home"></span>&nbsp;About My Hotel</a></p></h1>
 </div>
 <TD vAlign=top colSpan=3 align="center">
-<div style="width:1500px; height:110px" align="center">
+<div style="width:1300px; height:110px" align="center">
 <h2><p style="color:Black;">Welcome to My Hotel</p></h2>
 
 <h3><p style="color:Black;">Malaysia is the one of the most enjoyable countries to travel. 
@@ -75,7 +75,7 @@ Many travelers like to travel to Malaysia because of various kinds of event and 
 Travel spots which located in different states, such as Kedah, Penang, Perak, Kelantan and so on. 
 Other than the travel spots, the generations of slow life in Malaysia attracts the travelers to pay a visit and enjoy their life vacation or staying in Malaysia. 
 So, a lot of accommodations are set up to convenience the travelers to stay overnight safely. </p></h3>
-echo'<img src="hotel.jpg" width="550" height="300" style="margin:center;">';
+<img src="hotel.jpg" width="550" height="300" style="margin:center;">';
 </div>
 	<script src="assets/jquery-1.11.3-jquery.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>

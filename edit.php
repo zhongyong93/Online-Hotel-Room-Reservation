@@ -69,7 +69,7 @@ if($userRow['userRole'] != 1){
 
 								<table width="600">
 								<tr>
-								<th align="center" bgcolor="silver">Reservation ID</th>
+								<th align="center" bgcolor="silver">User ID</th>
 								<th align="center" bgcolor="silver">userName</th>
 								<th align="center" bgcolor="silver">userEmail</th>
 								</tr>

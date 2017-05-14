@@ -114,10 +114,10 @@ echo "0 results";
 <?php
 $result = mysqli_query($conn, $sql1);
 echo "Select Reservation Room to delete : ";
-echo "<select name=\"userId\">";
+echo "<select name=\"rs_Id\">";
 while($row=mysqli_fetch_array($result))
 {
-echo "<option value= '".$row['userId']."' > ".$row['userEmail']." </option>";
+echo "<option value= '".$row['rs_Id']."' > ".$row['rs_Id']." </option>";
 }
 echo "</select>";
  echo "<br><br>";

@@ -34,28 +34,28 @@ if ($_POST["sBed"] == 0) {
 				$roomtype = "fBed";
 				$roomNum = $_POST["fBed"];
 				$pay = $_POST["fBed"] * 30;
-				$pay1 = $userRow['costPay'] +($_POST["fBed"] * 30);
+				$pay1 = $userRow['costPay'] + $userRow['cancel'] +($_POST["fBed"] * 30);
 			}
 		}
 		else {
 			$roomtype = "dBed";
 			$roomNum = $_POST["dBed"];
 			$pay = $_POST["dBed"] * 140;
-			$pay1 = $userRow['costPay'] +($_POST["dBed"] * 140);
+			$pay1 = $userRow['costPay'] + $userRow['cancel'] +($_POST["dBed"] * 140);
 		}
 	}
 	else {
 			$roomtype = "tSBed";
 			$roomNum = $_POST["tSBed"];
 			$pay = $_POST["tSBed"] * 80;
-			$pay1 = $userRow['costPay'] +($_POST["tSBed"] * 80);
+			$pay1 = $userRow['costPay'] + $userRow['cancel'] +($_POST["tSBed"] * 80);
 		}
 }
 else {
 			$roomtype = "sBed";
 			$roomNum = $_POST["sBed"];
 			$pay = $_POST["sBed"] * 55;
-			$pay1 = $userRow['costPay'] +($_POST["sBed"] * 55);
+			$pay1 = $userRow['costPay'] + $userRow['cancel'] + ($_POST["sBed"] * 55);
 		}
 ?>
 <?php
@@ -63,7 +63,7 @@ $sql1 = "SELECT rmType,dateCi, SUM(rmNum) as total FROM reserve GROUP BY rmType,
 	$result = mysqli_query($conn,$sql1);
 	while ($row1 = mysqli_fetch_assoc($result)) {
 if ($row1['dateCi'] == $_SESSION['checkIn']){
-if ($row1['rmType'] == 'sBed'){
+if ($row1['rmType'] == 'sBed' && $_POST['sBed'] != 0){
 	if ($row1['total'] >= 10) {
 		echo "<script>alert('Single Bed Room is Full Occupied.')</script>";
 		echo "<script>window.open('index.php','_self')</script>";
@@ -74,7 +74,7 @@ if ($row1['rmType'] == 'sBed'){
 	}
 }
 if ($row1['rmType'] == 'tSBed'){
-		if ($row1['total'] >= 10) {
+		if ($row1['total'] >= 10 && $_POST['tSBed'] != 0) {
 		echo "<script>alert('Two Single Bed Room is Full Occupied'></script>";
 		echo "<script>window.open('index.php','_self')</script>";
 		exit;
@@ -84,7 +84,7 @@ if ($row1['rmType'] == 'tSBed'){
 	}
 }
 if ($row1['rmType'] == 'dBed'){
-		if ($row1['total'] >= 5) {
+		if ($row1['total'] >= 5 && $_POST['dBed'] != 0) {
 		echo "<script>alert('Double Bed Room is Full Occupied')</script>";
 		echo "<script>window.open('index.php','_self')</script>";
 		exit;
@@ -94,7 +94,7 @@ if ($row1['rmType'] == 'dBed'){
 	}
 }
 if ($row1['rmType'] == 'fBed'){
-		if ($row1['total'] >= 12) {
+		if ($row1['total'] >= 12 && $_POST['fBed'] != 0) {
 		echo "<script>alert('Four-Bed Domitary Room is Full Occupied'></script>";
 		echo "<script>window.open('index.php','_self')</script>";
 		exit;
@@ -106,7 +106,7 @@ if ($row1['rmType'] == 'fBed'){
 }
 if ($row1['dateCi'] == $_SESSION['checkOut']){
 if ($row1['rmType'] == 'sBed'){
-	if ($row1['total'] >= 10) {
+	if ($row1['total'] >= 10 && $_POST['sBed'] != 0) {
 		echo "<script>alert('Single Bed Room is Full Occupied.')</script>";
 		echo "<script>window.open('index.php','_self')</script>";
 		exit;
@@ -116,7 +116,7 @@ if ($row1['rmType'] == 'sBed'){
 	}
 }
 if ($row1['rmType'] == 'tSBed'){
-		if ($row1['total'] >= 10) {
+		if ($row1['total'] >= 10 && $_POST['tSBed'] != 0) {
 		echo "<script>alert('Two Single Bed Room is Full Occupied'></script>";
 		echo "<script>window.open('index.php','_self')</script>";
 		exit;
@@ -126,7 +126,7 @@ if ($row1['rmType'] == 'tSBed'){
 	}
 }
 if ($row1['rmType'] == 'dBed'){
-		if ($row1['total'] >= 5) {
+		if ($row1['total'] >= 5 && $_POST['dBed'] != 0) {
 		echo "<script>alert('Double Bed Room is Full Occupied'></script>";
 		echo "<script>window.open('index.php','_self')</script>";
 		exit;
@@ -136,7 +136,7 @@ if ($row1['rmType'] == 'dBed'){
 	}
 }
 if ($row1['rmType'] == 'fBed'){
-		if ($row1['total'] >= 12) {
+		if ($row1['total'] >= 12 && $_POST['fBed'] != 0) {
 		echo "<script>alert('Four-Bed Domitary Room is Full Occupied'></script>";
 		echo "<script>window.open('index.php','_self')</script>";
 		exit;

@@ -74,9 +74,10 @@
 		// if there's no error, continue to signup
 		if( !$error ) {
 				// select loggedin users detail
+			$cancel = "0";
 			$pay = "0";
 			$role = "2";
-			$query = "INSERT INTO users(userName,userEmail,userPass,userRole,costPay) VALUES('$name','$email','$password','$role','$pay')";
+			$query = "INSERT INTO users(userName,userEmail,userPass,userRole,costPay,cancel) VALUES('$name','$email','$password','$role','$pay','$cancel')";
 			$res = mysqli_query($conn,$query);
 				
 			if ($res) {

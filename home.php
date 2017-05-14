@@ -86,8 +86,8 @@ function test_input($data) {
 ?> 
 <table>
 <form method="post" action="newnew2.php">  
-<font size=5><label for="meeting" >Check In : </label><input id="meeting" type="date" name="checkIn" min=<?php echo  ''.date("Y-m-d")?> value="<?php echo $checkIn;?>"></font><br>
-<font size=5><label for="meeting">Check Out : </label><input id="meeting" type="date" name="checkOut" min=<?php echo  ''.date("Y-m-d",strtotime(' +1 day'))?> value="<?php echo $checkOut;?>"></font><br>
+<font size=5><label for="meeting" >Check In : </label><input id="meeting" type="date" required name="checkIn" min=<?php echo  ''.date("Y-m-d")?> value="<?php echo $checkIn;?>"></font><br>
+<font size=5><label for="meeting">Check Out : </label><input id="meeting" type="date" required name="checkOut" min=<?php echo  ''.date("Y-m-d",strtotime(' +1 day'))?> value="<?php echo $checkOut;?>"></font><br>
 <font size=5><label for="meeting">Guest : </font></label>
 <font size=5><select id="meeting" name="guest" id="max_adults" value="<?php echo $guest;?>"> <br>
 <option value="1" selected="selected">1&nbsp;</option>
