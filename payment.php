@@ -1,7 +1,7 @@
 <?php
 	
 	require_once 'dbconnect.php';
-	
+	$_SESSION['dri'];
 	// if session is not set this will redirect to login page
 	if( !isset($_SESSION['user']) ) {
 		header("Location: index.php");
@@ -16,18 +16,18 @@
 	 while($row = mysqli_fetch_array($result)) {
    		$userRow = $row;
  }
-	$sql1 = "SELECT * FROM reserve WHERE userId=".$_SESSION['user'];
-	$res = mysqli_query($conn, $sql1);
-	if (!$res){
+	$sql4 = "SELECT * FROM reserve WHERE userId=".$_SESSION['user'];
+	$res4 = mysqli_query($conn, $sql4);
+	if (!$res4){
 	$reserveRow['cost'] = "0" ;
 	}
-	else if ($res) {
+	else if ($res4) {
 		echo $conn->error;
-	 while($row1 = mysqli_fetch_array($res)) {
-   		$reserveRow = $row1;
+	 while($row4 = mysqli_fetch_array($res4)) {
+   		$reserveRow = $row4;
 	 }
 	}
-	$sql3 = "SELECT * FROM `reserve` WHERE `userId` = ".$_SESSION['uid'];
+	$sql3 = "SELECT * FROM `reserve` WHERE `userId` = ".$_SESSION['user'];
 	$result3 = mysqli_query($conn,$sql3);
 	$total = 0;
 	$payment = "";
